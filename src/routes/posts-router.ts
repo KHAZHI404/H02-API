@@ -101,7 +101,7 @@ postsRouter.delete('/:postId',
     (req: Request, res: Response) => {
     const id = req.params.postId
     const isDeleted = postsRepository.deletePost(id)
-    !isDeleted ? res.sendStatus(HTTP_STATUSES.NO_CONTENT_204) : res.sendStatus(HTTP_STATUSES.NOT_FOUND_404)
+    isDeleted ? res.sendStatus(HTTP_STATUSES.NO_CONTENT_204) : res.sendStatus(HTTP_STATUSES.NOT_FOUND_404)
 })
 
 
