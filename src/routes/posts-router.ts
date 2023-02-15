@@ -92,7 +92,7 @@ postsRouter.put('/:postId',
     const blogName = req.body.blogName
 
     const isUpdated = postsRepository.updatePost(id, title, shortDescription, content, blogId, blogName)
-    isUpdated ? res.status(HTTP_STATUSES.NO_CONTENT_204).send(postsRepository.findPostById(id)) : res.sendStatus(HTTP_STATUSES.NOT_FOUND_404)
+    isUpdated ? res.sendStatus(HTTP_STATUSES.NO_CONTENT_204) : res.sendStatus(HTTP_STATUSES.NOT_FOUND_404)
 
 })
 

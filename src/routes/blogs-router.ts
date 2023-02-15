@@ -69,11 +69,11 @@ blogsRouter.put('/:blogId',
     const websiteUrl = req.body.websiteUrl
 
     const isUpdated = blogsRepository.updateBlog(id, name, description, websiteUrl)
-    isUpdated ? res.status(HTTP_STATUSES.NO_CONTENT_204).send(blogsRepository.findBlogById(id)) : res.sendStatus(HTTP_STATUSES.NOT_FOUND_404) // добавил статус 204
+    isUpdated ? res.send(blogsRepository.findBlogById(id)) : res.sendStatus(HTTP_STATUSES.NOT_FOUND_404)
 })
 
 blogsRouter.delete('/:blogId',
-    authGuardMiddleware, // add auth
+    authGuardMiddleware,
     (req: Request, res: Response) => {
     const id = req.params.blogId
     const isDeleted = blogsRepository.deleteBlogs(id)
