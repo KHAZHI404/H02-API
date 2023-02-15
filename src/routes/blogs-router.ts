@@ -69,7 +69,7 @@ blogsRouter.put('/:blogId',
     const websiteUrl = req.body.websiteUrl
 
     const isUpdated = blogsRepository.updateBlog(id, name, description, websiteUrl)
-    isUpdated ? res.send(blogsRepository.findBlogById(id)) : res.sendStatus(HTTP_STATUSES.NOT_FOUND_404)
+    isUpdated ? res.sendStatus(HTTP_STATUSES.NO_CONTENT_204) : res.sendStatus(HTTP_STATUSES.NOT_FOUND_404)
 })
 
 blogsRouter.delete('/:blogId',
