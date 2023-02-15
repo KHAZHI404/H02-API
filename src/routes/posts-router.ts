@@ -41,7 +41,7 @@ const blogIdValidator = body('blogId', 'blogId must be a string and be between 3
 const blogNameValidator = body('blogName', 'blogName must be a string')
     .isString()
 
-const postsPostAndPutValidator = [
+const postsValidator = [
     authGuardMiddleware,
     titleValidator,
     shortDescriptionValidator,
@@ -63,7 +63,7 @@ postsRouter.get('/:postId', (req: Request, res: Response) => {
 })
 
 postsRouter.post('/',
-    postsPostAndPutValidator,
+    postsValidator,
     (req: Request, res: Response) => {
     try {
         const title = req.body.title
@@ -82,7 +82,7 @@ postsRouter.post('/',
 })
 
 postsRouter.put('/:postId',
-    postsPostAndPutValidator,
+    postsValidator,
     (req: Request, res: Response) => {
     const id = req.params.postId
     const title = req.body.title
@@ -92,7 +92,7 @@ postsRouter.put('/:postId',
     const blogName = req.body.blogName
 
     const isUpdated = postsRepository.updatePost(id, title, shortDescription, content, blogId, blogName)
-    isUpdated ? res.send(postsRepository.findPostById(id)) : res.sendStatus(HTTP_STATUSES.NOT_FOUND_404)
+    isUpdated ? res.status(HTTP_STATUSES.NO_CONTENT_204).send(postsRepository.findPostById(id)) : res.sendStatus(HTTP_STATUSES.NOT_FOUND_404)
 
 })
 

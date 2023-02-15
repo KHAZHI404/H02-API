@@ -25,7 +25,7 @@ const websiteUrlValidation = body('websiteUrl', 'websiteUrl must be a url and be
     .isLength({min: 3, max: 100})
     .isURL()
 
-const blogsPostAndPutValidator = [
+const blogsValidator = [
     authGuardMiddleware,
     nameValidation,
     descriptionValidation,
@@ -38,8 +38,14 @@ blogsRouter.get('/', (req: Request, res: Response) => {
     res.status(HTTP_STATUSES.OK_200).send(findBlogs)
 })
 
+blogsRouter.get('/:blogId', (req: Request, res: Response) => {
+    const id = req.params.blogId
+    const blog = blogsRepository.findBlogById(id)
+    return blog ? res.status(HTTP_STATUSES.OK_200).send(blog) : res.sendStatus(HTTP_STATUSES.NOT_FOUND_404)
+})
+
 blogsRouter.post('/',
-    blogsPostAndPutValidator,
+    blogsValidator,
     (req: Request, res: Response) => {
         try {
         const name = req.body.name
@@ -54,14 +60,8 @@ blogsRouter.post('/',
     }
 })
 
-blogsRouter.get('/:blogId', (req: Request, res: Response) => {
-    const id = req.params.blogId
-    const blog = blogsRepository.findBlogById(id)
-    return blog ? res.status(HTTP_STATUSES.OK_200).send(blog) : res.sendStatus(HTTP_STATUSES.NOT_FOUND_404)
-})
-
 blogsRouter.put('/:blogId',
-    blogsPostAndPutValidator,
+    blogsValidator,
     (req: Request, res: Response) => {
     const id = req.params.blogId
     const name = req.body.name
