@@ -1,0 +1,79 @@
+
+type PostsType = {
+    id:  string,
+    title:  string,
+    shortDescription:  string,
+    content:  string,
+    blogId: string,
+    blogName: string // когда делаю этот параметр необязательным выдает ошибку
+}
+
+export const posts = [
+        {
+            id:  '1',
+            title:  'string',
+            shortDescription:  'string',
+            content:  'string',
+            blogId: 'string',
+            blogName: 'string'
+        },
+        {
+            id:  '2',
+            title:  'string22',
+            shortDescription:  'string22',
+            content:  'string22',
+            blogId: 'string22',
+            blogName: 'string22'
+        }
+    ]
+
+export const postsRepository = {
+
+    findAllPosts(): PostsType[] {
+        return posts
+    },
+
+    findPostById(id: string) {
+        return posts.find(p => p.id === id)
+    },
+
+    createPost(title: string, shortDescription: string, content: string, blogId: string, blogName: string) {
+
+        const newPost: PostsType = {
+            id: new Date().toString(),
+            title: title,
+            shortDescription: shortDescription,
+            content: content,
+            blogId: blogId,
+            blogName: blogName
+        }
+
+        posts.push(newPost)
+        return newPost
+    },
+
+    updatePost(id: string, title: string, shortDescription: string, content: string, blogId: string, blogName: string) {
+        const post = posts.find(p => p.id === id)
+        if (!post) {
+            return false
+        } else {
+            post.title = title
+            post.shortDescription = shortDescription
+            post.content = content
+            post.blogId = blogId
+            post.blogName = blogName
+            return true
+        }
+    },
+
+    deletePost(id: string) {
+        for (let i = 0 ; i < posts.length; i++) {
+            if (posts[i].id === id) {
+                posts.splice(i, 1)
+                return true
+            }
+        }
+        return false
+    }
+
+}
