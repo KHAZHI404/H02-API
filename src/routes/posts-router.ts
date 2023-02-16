@@ -77,9 +77,9 @@ postsRouter.put('/:postId',
     postsValidator,
     (req: Request, res: Response) => {
     const id = req.params.postId
-    const {title, shortDescription, content, blogId, blogName} = req.body
+    const {title, shortDescription, content, blogId} = req.body
 
-    const isUpdated = postsRepository.updatePost(id, title, shortDescription, content, blogId, blogName)
+    const isUpdated = postsRepository.updatePost(id, title, shortDescription, content, blogId)
     res.sendStatus(isUpdated ? HTTP_STATUSES.NO_CONTENT_204 : HTTP_STATUSES.NOT_FOUND_404)
 })
 

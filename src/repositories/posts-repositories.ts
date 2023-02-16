@@ -42,7 +42,7 @@ export const postsRepository = {
         const blog = blogsRepository.findBlogById(blogId)
         if (!blog) return  null
         const newPost: PostsType = {
-            id: Math.random().toString(36),//new Date().toString(),
+            id: Math.random().toString(36),
             title: title,
             shortDescription: shortDescription,
             content: content,
@@ -54,7 +54,7 @@ export const postsRepository = {
         return newPost
     },
 
-    updatePost(id: string, title: string, shortDescription: string, content: string, blogId: string, blogName: string) {
+    updatePost(id: string, title: string, shortDescription: string, content: string, blogId: string) {
         const blog = blogsRepository.findBlogById(blogId)
         if (!blog) return  null
         const post = posts.find(p => p.id === id)
@@ -64,7 +64,7 @@ export const postsRepository = {
             post.title = title
             post.shortDescription = shortDescription
             post.content = content
-            post.blogId = Math.random().toString(36),//blogId
+            post.blogId = Math.random().toString(36)
             post.blogName = blog.name
             return true
         }
