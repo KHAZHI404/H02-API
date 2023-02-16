@@ -42,7 +42,7 @@ export const postsRepository = {
         const blog = blogsRepository.findBlogById(blogId)
         if (!blog) return  null
         const newPost: PostsType = {
-            id: new Date().toString(),
+            id: Math.random().toString(36),//new Date().toString(),
             title: title,
             shortDescription: shortDescription,
             content: content,
