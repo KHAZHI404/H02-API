@@ -48,11 +48,9 @@ blogsRouter.post('/',
     blogsValidator,
     (req: Request, res: Response) => {
         try {
-        const name = req.body.name
-        const description = req.body.description
-        const websiteUrl = req.body.websiteUrl
+            const {name, description, websiteUrl} = req.body
 
-        const newBlogs = blogsRepository.createBlog(name, description, websiteUrl)
+            const newBlogs = blogsRepository.createBlog(name, description, websiteUrl)
         res.status(HTTP_STATUSES.CREATED_201).send(newBlogs)
     } catch (e) {
         console.log(e);
@@ -64,9 +62,7 @@ blogsRouter.put('/:blogId',
     blogsValidator,
     (req: Request, res: Response) => {
     const id = req.params.blogId
-    const name = req.body.name
-    const description = req.body.description
-    const websiteUrl = req.body.websiteUrl
+    const {name, description, websiteUrl} = req.body
 
     const isUpdated = blogsRepository.updateBlog(id, name, description, websiteUrl)
     isUpdated ? res.sendStatus(HTTP_STATUSES.NO_CONTENT_204) : res.sendStatus(HTTP_STATUSES.NOT_FOUND_404)

@@ -66,11 +66,7 @@ postsRouter.post('/',
     postsValidator,
     (req: Request, res: Response) => {
     try {
-        const title = req.body.title
-        const shortDescription = req.body.shortDescription
-        const content = req.body.content
-        const blogId = req.body.blogId
-        const blogName = req.body.blogName
+        const {title, shortDescription, content, blogId, blogName} = req.body
 
         const newPost = postsRepository.createPost(title, shortDescription, content, blogId, blogName)
         res.status(HTTP_STATUSES.CREATED_201).send(newPost)
@@ -85,11 +81,7 @@ postsRouter.put('/:postId',
     postsValidator,
     (req: Request, res: Response) => {
     const id = req.params.postId
-    const title = req.body.title
-    const shortDescription = req.body.shortDescription
-    const content = req.body.content
-    const blogId = req.body.blogId
-    const blogName = req.body.blogName
+        const {title, shortDescription, content, blogId, blogName} = req.body
 
     const isUpdated = postsRepository.updatePost(id, title, shortDescription, content, blogId, blogName)
     isUpdated ? res.sendStatus(HTTP_STATUSES.NO_CONTENT_204) : res.sendStatus(HTTP_STATUSES.NOT_FOUND_404)
