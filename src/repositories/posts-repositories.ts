@@ -63,7 +63,7 @@ export const postsRepository = {
             post.title = title
             post.shortDescription = shortDescription
             post.content = content
-            post.blogId = Math.random().toString(36)
+            post.blogId = blogId
             post.blogName = blog.name
             return true
         }
