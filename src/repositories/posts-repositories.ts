@@ -6,7 +6,7 @@ type PostsType = {
     shortDescription:  string,
     content:  string,
     blogId: string,
-    blogName: string // когда делаю этот параметр необязательным выдает ошибку
+    blogName: string
 }
 
 export const posts = [
