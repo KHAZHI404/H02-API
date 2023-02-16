@@ -49,7 +49,6 @@ export const postsRepository = {
             blogId: blogId,
             blogName: blog.name
         }
-
         posts.push(newPost)
         return newPost
     },
