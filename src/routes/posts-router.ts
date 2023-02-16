@@ -38,16 +38,12 @@ const blogIdValidator = body('blogId', 'blogId must be a string and be between 3
         return true
     })
 
-const blogNameValidator = body('blogName', 'blogName must be a string')
-    .isString()
-
 const postsValidator = [
     authGuardMiddleware,
     titleValidator,
     shortDescriptionValidator,
     contentValidator,
     blogIdValidator,
-    blogNameValidator,
     inputValidationMiddleware,
 ]
 
@@ -66,9 +62,9 @@ postsRouter.post('/',
     postsValidator,
     (req: Request, res: Response) => {
     try {
-        const {title, shortDescription, content, blogId, blogName} = req.body
+        const {title, shortDescription, content, blogId} = req.body
 
-        const newPost = postsRepository.createPost(title, shortDescription, content, blogId, blogName)
+        const newPost = postsRepository.createPost(title, shortDescription, content, blogId)
         res.status(HTTP_STATUSES.CREATED_201).send(newPost)
 
     } catch (e) {
@@ -81,11 +77,10 @@ postsRouter.put('/:postId',
     postsValidator,
     (req: Request, res: Response) => {
     const id = req.params.postId
-        const {title, shortDescription, content, blogId, blogName} = req.body
+    const {title, shortDescription, content, blogId, blogName} = req.body
 
     const isUpdated = postsRepository.updatePost(id, title, shortDescription, content, blogId, blogName)
-    isUpdated ? res.sendStatus(HTTP_STATUSES.NO_CONTENT_204) : res.sendStatus(HTTP_STATUSES.NOT_FOUND_404)
-
+    res.sendStatus(isUpdated ? HTTP_STATUSES.NO_CONTENT_204 : HTTP_STATUSES.NOT_FOUND_404)
 })
 
 postsRouter.delete('/:postId',
@@ -93,7 +88,7 @@ postsRouter.delete('/:postId',
     (req: Request, res: Response) => {
     const id = req.params.postId
     const isDeleted = postsRepository.deletePost(id)
-    isDeleted ? res.sendStatus(HTTP_STATUSES.NO_CONTENT_204) : res.sendStatus(HTTP_STATUSES.NOT_FOUND_404)
+    res.sendStatus(isDeleted ? HTTP_STATUSES.NO_CONTENT_204 : HTTP_STATUSES.NOT_FOUND_404)
 })
 
 

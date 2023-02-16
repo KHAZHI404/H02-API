@@ -1,3 +1,4 @@
+import {blogsRepository} from "./blogs-repositories";
 
 type PostsType = {
     id:  string,
@@ -37,15 +38,16 @@ export const postsRepository = {
         return posts.find(p => p.id === id)
     },
 
-    createPost(title: string, shortDescription: string, content: string, blogId: string, blogName: string) {
-
+    createPost(title: string, shortDescription: string, content: string, blogId: string ) {
+        const blog = blogsRepository.findBlogById(blogId)
+        if (!blog) return  null
         const newPost: PostsType = {
             id: new Date().toString(),
             title: title,
             shortDescription: shortDescription,
             content: content,
             blogId: blogId,
-            blogName: blogName
+            blogName: blog.name
         }
 
         posts.push(newPost)
