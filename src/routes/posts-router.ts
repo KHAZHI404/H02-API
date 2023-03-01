@@ -47,26 +47,24 @@ const postsValidator = [
     inputValidationMiddleware,
 ]
 
-postsRouter.get('/', (req: Request, res: Response) => {
-    const findPosts = postsRepository.findAllPosts()
+postsRouter.get('/', async (req: Request, res: Response) => {
+    const findPosts = await postsRepository.findAllPosts()
     res.status(HTTP_STATUSES.OK_200).send(findPosts)
 })
 
-postsRouter.get('/:postId', (req: Request, res: Response) => {
+postsRouter.get('/:postId', async (req: Request, res: Response) => {
     const id = req.params.postId
-    const post = postsRepository.findPostById(id)
+    const post = await postsRepository.findPostById(id)
     return post ? res.status(HTTP_STATUSES.OK_200).send(post) : res.sendStatus(HTTP_STATUSES.NOT_FOUND_404)
 })
 
 postsRouter.post('/',
     postsValidator,
-    (req: Request, res: Response) => {
+    async (req: Request, res: Response) => {
     try {
-        const {title, shortDescription, content, blogId} = req.body
-
-        const newPost = postsRepository.createPost(title, shortDescription, content, blogId)
+        const {id, title, shortDescription, content, blogId} = req.body
+        const newPost = await postsRepository.createPost(id, title, shortDescription, content, blogId)
         res.status(HTTP_STATUSES.CREATED_201).send(newPost)
-
     } catch (e) {
         console.log(e);
         return res.sendStatus(HTTP_STATUSES.BAD_REQUEST_400)
@@ -75,19 +73,18 @@ postsRouter.post('/',
 
 postsRouter.put('/:postId',
     postsValidator,
-    (req: Request, res: Response) => {
+    async (req: Request, res: Response) => {
     const id = req.params.postId
     const {title, shortDescription, content, blogId} = req.body
-
-    const isUpdated = postsRepository.updatePost(id, title, shortDescription, content, blogId)
+    const isUpdated = await postsRepository.updatePost(id, title, shortDescription, content, blogId)
     res.sendStatus(isUpdated ? HTTP_STATUSES.NO_CONTENT_204 : HTTP_STATUSES.NOT_FOUND_404)
 })
 
 postsRouter.delete('/:postId',
     authGuardMiddleware,
-    (req: Request, res: Response) => {
+    async (req: Request, res: Response) => {
     const id = req.params.postId
-    const isDeleted = postsRepository.deletePost(id)
+    const isDeleted = await postsRepository.deletePost(id)
     res.sendStatus(isDeleted ? HTTP_STATUSES.NO_CONTENT_204 : HTTP_STATUSES.NOT_FOUND_404)
 })
 

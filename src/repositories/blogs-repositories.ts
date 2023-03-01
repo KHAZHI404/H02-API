@@ -1,68 +1,66 @@
+import {blogsCollection, BlogsType} from "../db/db";
 
-type BlogsType = {
+
+type BlogsViewType = {
     id: string,
     name: string,
     description: string,
     websiteUrl: string,
+    createdAt: string,
+    isMembership: boolean
 }
-
-export const blogs = [
-        {
-            id: '1',
-            name: 'Andruha',
-            description: 'young man',
-            websiteUrl: 'https/nice-man.com'
-        },
-        {
-            id: '2',
-            name: 'Sanek',
-            description: 'old human',
-            websiteUrl: 'theoldest.com'
-        }
-    ]
-
 export const blogsRepository = {
 
-    findAllBlogs(): BlogsType[] {
-        return blogs
+    async findAllBlogs(): Promise<BlogsType[]> {
+        return await blogsCollection.find().toArray()
     },
 
-    findBlogById(id: string) {
-        return blogs.find(b => b.id === id)
+    async findBlogById(id: string): Promise<BlogsViewType | null> {
+        const blog = await blogsCollection.findOne({id: id})
+        if (!blog) {return null}
+        return {
+            id: id,
+            name: blog.name,
+            description: blog.description,
+            websiteUrl: blog.websiteUrl,
+            createdAt: blog?.createdAt,
+            isMembership: false
+        }
     },
 
-    createBlog(name: string, description: string, websiteUrl: string) {
-        const newBlogs: BlogsType = {
-            id: new Date().toString(),
+    async createBlog(name: string, description: string, websiteUrl: string): Promise<BlogsViewType | null> {
+        const dateNow = new Date()
+        const newBlog = {
+            id: (+dateNow).toString(),
             name: name,
             description: description,
-            websiteUrl: websiteUrl
+            websiteUrl: websiteUrl,
+            createdAt: dateNow.toISOString(),
+            isMembership: false
         }
-
-        blogs.push(newBlogs)
-        return newBlogs
-    },
-
-    updateBlog(id: string, name: string, description: string, websiteUrl:string) {
-        const blog = blogs.find(b => b.id === id)
-        if (!blog) {
-            return false
-        } else {
-            blog.name = name
-            blog.description = description
-            blog.websiteUrl = websiteUrl
-            return true
+        await blogsCollection.insertOne(newBlog)
+        return {
+            id: newBlog.id,
+            name: newBlog.name,
+            description: newBlog.description,
+            websiteUrl: newBlog.websiteUrl,
+            createdAt: newBlog.createdAt,
+            isMembership: newBlog.isMembership
         }
     },
 
-    deleteBlogs(id: string) {
-        for (let i = 0 ; i < blogs.length; i++) {
-            if (blogs[i].id === id) {
-                blogs.splice(i, 1)
-                return true
-            }
-        }
-        return false
+    async updateBlog(id: string, name: string, description: string, websiteUrl:string) {
+         const result =  await blogsCollection.updateOne({id: id}, {$set: {
+            name: name,
+                 description: description,
+                 websiteUrl: websiteUrl
+            }} )
+        return result.matchedCount === 1
+    },
+
+    async deleteBlogs(id: string) {
+        const isDel = await blogsCollection.deleteOne({id: id})
+        return isDel.deletedCount === 1
     }
 
 }

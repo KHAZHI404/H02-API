@@ -33,25 +33,24 @@ const blogsValidator = [
     inputValidationMiddleware
 ]
 
-blogsRouter.get('/', (req: Request, res: Response) => {
-    const findBlogs = blogsRepository.findAllBlogs()
+blogsRouter.get('/', async (req: Request, res: Response) => {
+    const findBlogs = await blogsRepository.findAllBlogs()
     res.status(HTTP_STATUSES.OK_200).send(findBlogs)
 })
 
-blogsRouter.get('/:blogId', (req: Request, res: Response) => {
+blogsRouter.get('/:blogId', async (req: Request, res: Response) => {
     const id = req.params.blogId
-    const blog = blogsRepository.findBlogById(id)
+    const blog = await blogsRepository.findBlogById(id)
     return blog ? res.status(HTTP_STATUSES.OK_200).send(blog) : res.sendStatus(HTTP_STATUSES.NOT_FOUND_404)
 })
 
 blogsRouter.post('/',
     blogsValidator,
-    (req: Request, res: Response) => {
+    async (req: Request, res: Response) => {
         try {
             const {name, description, websiteUrl} = req.body
-
-            const newBlogs = blogsRepository.createBlog(name, description, websiteUrl)
-        res.status(HTTP_STATUSES.CREATED_201).send(newBlogs)
+            const newBlog = await blogsRepository.createBlog(name, description, websiteUrl)
+        res.status(HTTP_STATUSES.CREATED_201).send(newBlog)
     } catch (e) {
         console.log(e);
         return res.sendStatus(HTTP_STATUSES.BAD_REQUEST_400)
@@ -60,19 +59,17 @@ blogsRouter.post('/',
 
 blogsRouter.put('/:blogId',
     blogsValidator,
-    (req: Request, res: Response) => {
+    async (req: Request, res: Response) => {
     const id = req.params.blogId
     const {name, description, websiteUrl} = req.body
-
-    const isUpdated = blogsRepository.updateBlog(id, name, description, websiteUrl)
+    const isUpdated = await blogsRepository.updateBlog(id, name, description, websiteUrl)
     res.sendStatus(isUpdated ? HTTP_STATUSES.NO_CONTENT_204 : HTTP_STATUSES.NOT_FOUND_404)
-
     })
 
 blogsRouter.delete('/:blogId',
     authGuardMiddleware,
-    (req: Request, res: Response) => {
+    async (req: Request, res: Response) => {
     const id = req.params.blogId
-    const isDeleted = blogsRepository.deleteBlogs(id)
+    const isDeleted = await blogsRepository.deleteBlogs(id)
     res.sendStatus(isDeleted ? HTTP_STATUSES.NO_CONTENT_204 : HTTP_STATUSES.NOT_FOUND_404)
     })

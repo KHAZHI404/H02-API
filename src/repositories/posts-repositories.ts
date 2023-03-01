@@ -1,82 +1,90 @@
 import {blogsRepository} from "./blogs-repositories";
+import {postsCollection, PostsType} from "../db/db";
 
-type PostsType = {
+type PostViewType = {
     id:  string,
     title:  string,
     shortDescription:  string,
     content:  string,
     blogId: string,
-    blogName: string
+    blogName: string,
+    createdAt: string,
 }
-
-export const posts = [
-        {
-            id:  '1',
-            title:  'string',
-            shortDescription:  'string',
-            content:  'string',
-            blogId: 'string',
-            blogName: 'string'
-        },
-        {
-            id:  '2',
-            title:  'string22',
-            shortDescription:  'string22',
-            content:  'string22',
-            blogId: 'string22',
-            blogName: 'string22'
-        }
-    ]
-
 export const postsRepository = {
 
-    findAllPosts(): PostsType[] {
-        return posts
+    async findAllPosts(): Promise<PostsType[]> {
+        return await postsCollection.find().toArray()
     },
 
-    findPostById(id: string) {
-        return posts.find(p => p.id === id)
+    async findPostById(id: string) :Promise<PostViewType | null> {
+        const post = await postsCollection.findOne({id: id})
+        if (!post) {return null}
+        return {
+            id: id,
+            title: post.title,
+            shortDescription: post.shortDescription,
+            blogId: post.blogId,
+            blogName: post.blogName,
+            content: post.content,
+            createdAt: post?.createdAt
+        }
     },
 
-    createPost(title: string, shortDescription: string, content: string, blogId: string ) {
-        const blog = blogsRepository.findBlogById(blogId)
-        if (!blog) return  null
-        const newPost: PostsType = {
-            id: Math.random().toString(36),
+    async createPost(id: string, title: string, shortDescription: string, content: string, blogId: string ): Promise<PostViewType | null> {
+        const dateNow = new Date()
+        const blog = await blogsRepository.findBlogById(blogId)
+        if (!blog) return null
+        const newPost = {
+            id: (+dateNow).toString(),
             title: title,
             shortDescription: shortDescription,
             content: content,
             blogId: blogId,
-            blogName: blog.name
+            blogName: blog.name,
+            createdAt: dateNow.toISOString()
         }
-        posts.push(newPost)
-        return newPost
+        await postsCollection.insertOne(newPost)
+        return {
+            id: id,
+            title: newPost.title,
+            shortDescription: newPost.shortDescription,
+            content: newPost.content,
+            blogId: newPost.blogId,
+            blogName:newPost.blogName,
+            createdAt: newPost.createdAt
+        }
+
     },
 
-    updatePost(id: string, title: string, shortDescription: string, content: string, blogId: string) {
-        const blog = blogsRepository.findBlogById(blogId)
+    async updatePost(id: string, title: string, shortDescription: string, content: string, blogId: string) :Promise<PostViewType | null | boolean> {
+        const blog = await blogsRepository.findBlogById(blogId)
         if (!blog) return  null
-        const post = posts.find(p => p.id === id)
-        if (!post) {
-            return false
-        } else {
-            post.title = title
-            post.shortDescription = shortDescription
-            post.content = content
-            post.blogId = blogId
-            post.blogName = blog.name
-            return true
-        }
+        // const post = await postsCollection.findOne({id: id})
+        // if (!post) {
+        //     return false
+        // } else {
+        //     post.title = title
+        //     post.shortDescription = shortDescription
+        //     post.content = content
+        //     post.blogId = blogId
+        //     post.blogName = blog.name
+        //     post.createdAt = new Date().toISOString()
+        //     return true
+        // }
+        const result = await postsCollection.updateOne({id: id}, {$set: {
+            title: title,
+                shortDescription: shortDescription,
+                content: content,
+                blogId: blogId,
+                blogName: blog.name,
+                createdAt: new Date().toISOString()
+            }})
+        return result.matchedCount === 1
     },
 
-    deletePost(id: string) {
-        for (let i = 0 ; i < posts.length; i++) {
-            if (posts[i].id === id) {
-                posts.splice(i, 1)
-                return true
-            }
-        }
-        return false
+    async deletePost(id: string) {
+        const isDel = await postsCollection.deleteOne({id: id})
+        return isDel.deletedCount === 1
     }
 
 }

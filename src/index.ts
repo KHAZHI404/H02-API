@@ -2,9 +2,10 @@ import { blogsRouter } from "./routes/blogs-router"
 import { postsRouter } from "./routes/posts-router"
 import express from 'express';
 import {deleteAllRouter} from "./routes/delete-all-router";
+import { runDb } from "./db/db";
 
 const app = express()
-const port = 3000
+const port = process.env.PORT || 5001
 app.use(express.json())
 
 export const HTTP_STATUSES = {
@@ -20,6 +21,11 @@ app.use('/blogs', blogsRouter)
 app.use('/posts', postsRouter)
 app.use('/testing', deleteAllRouter)
 
-app.listen(port, () => {
-    console.log(`Example app listening on port ${port}`)
-})
+const startApp = async () => {
+    await runDb()
+    app.listen(port, () => {
+        console.log(`Example app listening on port ${port}`)
+    })
+}
+
+startApp()
