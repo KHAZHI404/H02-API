@@ -41,7 +41,11 @@ blogsRouter.get('/', async (req: Request, res: Response) => {
 blogsRouter.get('/:blogId', async (req: Request, res: Response) => {
     const id = req.params.blogId
     const blog = await blogsRepository.findBlogById(id)
-    return blog ? res.status(HTTP_STATUSES.OK_200).send(blog) : res.sendStatus(HTTP_STATUSES.NOT_FOUND_404)
+    if(blog) {
+        res.status(HTTP_STATUSES.OK_200).send(blog)
+    } else {
+        res.sendStatus(HTTP_STATUSES.NOT_FOUND_404)
+    }
 })
 
 blogsRouter.post('/',
