@@ -30,8 +30,8 @@ const blogIdValidator = body('blogId', 'blogId must be a string and be between 3
     .notEmpty()
     .trim()
     .isString()
-    .custom(value => {
-        if (!blogsRepository.findBlogById(value)) {
+    .custom(async value => {
+        if (!(await blogsRepository.findBlogById(value))) {
             throw new Error('BlogId is not found')
         }
         return true

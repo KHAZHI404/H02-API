@@ -30,7 +30,6 @@ const blogsValidator = [
     nameValidation,
     descriptionValidation,
     websiteUrlValidation,
-    inputValidationMiddleware
 ]
 
 blogsRouter.get('/', async (req: Request, res: Response) => {
@@ -51,6 +50,7 @@ blogsRouter.get('/:blogId', async (req: Request, res: Response) => {
 
 blogsRouter.post('/',
     blogsValidator,
+    inputValidationMiddleware,
     async (req: Request, res: Response) => {
         try {
             const {name, description, websiteUrl} = req.body
@@ -64,6 +64,7 @@ blogsRouter.post('/',
 
 blogsRouter.put('/:blogId',
     blogsValidator,
+    inputValidationMiddleware,
     async (req: Request, res: Response) => {
     const id = req.params.blogId
     const {name, description, websiteUrl} = req.body
@@ -73,6 +74,7 @@ blogsRouter.put('/:blogId',
 
 blogsRouter.delete('/:blogId',
     authGuardMiddleware,
+    inputValidationMiddleware,
     async (req: Request, res: Response) => {
     const id = req.params.blogId
     const isDeleted = await blogsRepository.deleteBlogs(id)

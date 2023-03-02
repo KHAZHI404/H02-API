@@ -43,6 +43,7 @@ export const postsRepository = {
         const dateNow = new Date()
         const blog = await blogsRepository.findBlogById(blogId)
         if (!blog) return null
+
         const newPost = {
             id: (+dateNow).toString(),
             title: title,
