@@ -11,7 +11,7 @@ export const inputValidationMiddleware = (req: Request, res: Response, next: Nex
                 field: elem.param
             }
         })
-        return res.status(HTTP_STATUSES.BAD_REQUEST_400).json({"errorsMessages": error})
+        return res.status(HTTP_STATUSES.BAD_REQUEST_400).json({errorsMessages: error})
     } else {
         next()
     }
