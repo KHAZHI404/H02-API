@@ -37,7 +37,7 @@ blogsRouter.get('/', async (req: Request, res: Response) => {
     res.status(HTTP_STATUSES.OK_200).send(findBlogs)
 })
 
-blogsRouter.get('/:blogId', inputValidationMiddleware,async (req: Request, res: Response) => {
+blogsRouter.get('/:blogId', async (req: Request, res: Response) => {
     const id = req.params.blogId
     const blog = await blogsRepository.findBlogById(id)
     if(blog) {
@@ -52,14 +52,9 @@ blogsRouter.post('/',
     blogsValidator,
     inputValidationMiddleware,
     async (req: Request, res: Response) => {
-        try {
             const {name, description, websiteUrl} = req.body
             const newBlog = await blogsRepository.createBlog(name, description, websiteUrl)
         res.status(HTTP_STATUSES.CREATED_201).send(newBlog)
-    } catch (e) {
-        console.log(e);
-        return res.sendStatus(HTTP_STATUSES.BAD_REQUEST_400)
-    }
 })
 
 blogsRouter.put('/:blogId',
