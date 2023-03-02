@@ -1,3 +1,4 @@
+import { v4 } from "uuid";
 import {blogsCollection, BlogsType} from "../db/db";
 
 
@@ -39,7 +40,7 @@ export const blogsRepository = {
     async createBlog(name: string, description: string, websiteUrl: string): Promise<BlogsViewType | null> {
         const dateNow = new Date()
         const newBlog = {
-            id: (+dateNow).toString(),
+            id: v4(),
             name: name,
             description: description,
             websiteUrl: websiteUrl,
