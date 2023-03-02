@@ -8,7 +8,7 @@ type BlogsViewType = {
     description: string,
     websiteUrl: string,
     createdAt: string,
-    isMembership: boolean
+    isMembership?: boolean
 }
 export const blogsRepository = {
 
@@ -25,16 +25,7 @@ export const blogsRepository = {
     },
 
     async findBlogById(id: string): Promise<BlogsViewType | null> {
-        const blog = await blogsCollection.findOne({id: id})
-        if (!blog) {return null}
-        return {
-            id: id,
-            name: blog.name,
-            description: blog.description,
-            websiteUrl: blog.websiteUrl,
-            createdAt: blog?.createdAt,
-            isMembership: false
-        }
+        return blogsCollection.findOne({id: id}, {projection: {_id: 0}})
     },
 
     async createBlog(name: string, description: string, websiteUrl: string): Promise<BlogsViewType | null> {
