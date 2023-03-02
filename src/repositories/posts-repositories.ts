@@ -54,7 +54,7 @@ export const postsRepository = {
         }
         await postsCollection.insertOne(newPost)
         return {
-            id: id,
+            id: newPost.id,
             title: newPost.title,
             shortDescription: newPost.shortDescription,
             content: newPost.content,
