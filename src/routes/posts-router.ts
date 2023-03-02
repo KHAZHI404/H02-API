@@ -20,7 +20,6 @@ const shortDescriptionValidator = body('shortDescription', 'shortDescription mus
     .isString()
     .isLength({min: 3, max: 100})
 
-
 const contentValidator = body('content', 'content must be a string and be between 3 and 1000 symbol')
     .notEmpty()
     .trim()

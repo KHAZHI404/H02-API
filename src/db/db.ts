@@ -1,16 +1,17 @@
 import {MongoClient} from "mongodb"
 import dotenv from 'dotenv'
+import {ObjectId, Document} from "mongodb";
 dotenv.config()
 
 export type BlogsType = {
-    //_id: ObjectId,
+    id: string,
     name: string,
     description: string,
     websiteUrl: string,
     createdAt: string
 }
 export type PostsType = {
-    //id:  string,
+    id:  string,
     title:  string,
     shortDescription:  string,
     content:  string,

@@ -13,7 +13,16 @@ type PostViewType = {
 export const postsRepository = {
 
     async findAllPosts(): Promise<PostsType[]> {
-        return await postsCollection.find().toArray()
+        const posts = await postsCollection.find().toArray()
+        return posts.map((post) => ({
+            id:  post.id,
+            title:  post.title,
+            shortDescription:  post.shortDescription,
+            content:  post.content,
+            blogId: post.blogId,
+            blogName: post.blogName,
+            createdAt: post.createdAt,
+        }))
     },
 
     async findPostById(id: string) :Promise<PostViewType | null> {
@@ -53,24 +62,11 @@ export const postsRepository = {
             blogName:newPost.blogName,
             createdAt: newPost.createdAt
         }
-
     },
 
     async updatePost(id: string, title: string, shortDescription: string, content: string, blogId: string) :Promise<PostViewType | null | boolean> {
         const blog = await blogsRepository.findBlogById(blogId)
         if (!blog) return  null
-        // const post = await postsCollection.findOne({id: id})
-        // if (!post) {
-        //     return false
-        // } else {
-        //     post.title = title
-        //     post.shortDescription = shortDescription
-        //     post.content = content
-        //     post.blogId = blogId
-        //     post.blogName = blog.name
-        //     post.createdAt = new Date().toISOString()
-        //     return true
-        // }
         const result = await postsCollection.updateOne({id: id}, {$set: {
             title: title,
                 shortDescription: shortDescription,

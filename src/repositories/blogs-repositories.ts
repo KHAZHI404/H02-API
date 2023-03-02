@@ -12,7 +12,15 @@ type BlogsViewType = {
 export const blogsRepository = {
 
     async findAllBlogs(): Promise<BlogsType[]> {
-        return await blogsCollection.find().toArray()
+        const blogs = await blogsCollection.find().toArray()
+        return blogs.map((blog) => ({
+                id: blog.id,
+                name: blog.name,
+                description: blog.description,
+                websiteUrl: blog.websiteUrl,
+                createdAt: blog.createdAt,
+                isMembership: false
+        }))
     },
 
     async findBlogById(id: string): Promise<BlogsViewType | null> {
