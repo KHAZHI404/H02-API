@@ -37,7 +37,7 @@ blogsRouter.get('/', async (req: Request, res: Response) => {
     res.status(HTTP_STATUSES.OK_200).send(findBlogs)
 })
 
-blogsRouter.get('/:blogId', async (req: Request, res: Response) => {
+blogsRouter.get('/:blogId', inputValidationMiddleware,async (req: Request, res: Response) => {
     const id = req.params.blogId
     const blog = await blogsRepository.findBlogById(id)
     if(blog) {
